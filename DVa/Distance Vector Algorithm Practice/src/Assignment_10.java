@@ -13,6 +13,8 @@ public class Assignment_10 {
 	public static Map<Integer, Integer> neighbors = new HashMap<Integer, Integer>();
 	public static int[] D0;
 	public static int[] L0;
+	public static int[] updatedD0;
+	public static int[] updatedL0;
 	public static int numRout;
 
 	public static void main(String[] args) {
@@ -23,48 +25,81 @@ public class Assignment_10 {
 		printDVMatrix();
 		printD0();
 		printL0();
+		boolean wishToContinue = true;
+		while (wishToContinue) {
+			int choice = a10.determineEvent();
+			if (choice == 1) {
+
+			} else {
+
+			}
+		}
 	}
 
-	public static void printNeighbors()
-	{
-		for(int key: neighbors.keySet())
+	public static boolean wishToContinue() {
+		System.out.println("Do you wish to input a new event of change or receiving?\n"
+				+ "Please enter y or n");
+		Scanner sc = new Scanner(System.in);
+		String choice = sc.next();
+		if (choice == "y") {
+			return true;
+		} else if (choice == "n") {
+			return false;
+		}
+		else
 		{
+			System.out.println("Your input was not valid");
+			return wishToContinue();
+		}
+
+	}
+
+	public static int determineEvent() {
+		System.out.println("Please type in the number of the following operation you wish to perform\n"
+				+ "Event 1: a change in local link cost to a neighbor of router V0\n"
+				+ "Event 2: receiving a distance vector message from a neighbor of router V0");
+		Scanner options = new Scanner(System.in);
+		int choice = options.nextInt();
+		if (choice == (1 | 2)) {
+			return choice;
+		} else {
+			System.out.println("Your choice was not within the valid range");
+			return determineEvent();
+		}
+	}
+
+	public static void printNeighbors() {
+		for (int key : neighbors.keySet()) {
 			System.out.println("Key: " + key + " Value: " + neighbors.get(key));
 		}
 	}
-	
-	public static void printDVMatrix()
-	{
-		for(int[] i:dVMatrix)
-		{
-			for(int j:i)
-			{
+
+	public static void printDVMatrix() {
+		for (int[] i : dVMatrix) {
+			for (int j : i) {
 				System.out.print(j);
 				System.out.print("\t");
 			}
 			System.out.println();
 		}
 	}
-	
-	public static void printD0()
-	{
-		for(int i:D0)
-		{
+
+	public static void printD0() {
+		for (int i : D0) {
 			System.out.print(i);
 			System.out.print("\t");
 		}
-			System.out.println();
+		System.out.println();
 	}
-	
-	public static void printL0()
-	{
-		for(int i:L0)
-		{
+
+	public static void printL0() {
+		for (int i : L0) {
 			System.out.print(i);
 			System.out.print("\t");
 		}
-			System.out.println();
+		System.out.println();
 	}
+
 	public void getNumRoutFromUser() {
 		System.out.println("Please enter the total number of routers in network");
 		Scanner keyboardIn = new Scanner(System.in);
@@ -113,10 +148,11 @@ public class Assignment_10 {
 				String[] numbers = line.split("\t");
 				int number1 = Integer.parseInt(numbers[0]);
 				int number2 = Integer.parseInt(numbers[1]);
-				if (0 < number1 && number1 < this.getNumRout()& number2 >0)
+				if (0 < number1 && number1 < this.getNumRout() & number2 > 0)
 					neighbors.put(number1, number2);
 				else {
-					System.out.println("line " + linecount + " in file "+filename+" contains input that was not within the valid range.\n"
+					System.out.println("line " + linecount + " in file " + filename
+							+ " contains input that was not within the valid range.\n"
 							+ "Please alter the file to be within the valid range and run the program again.");
 					return linecount;
 				}
@@ -155,15 +191,14 @@ public class Assignment_10 {
 					} else if (lineCount == 2) {
 						Assignment_10.L0 = numbers;
 					} else {
-						System.out.println("There are more lines in the file "+filename+" than there should be.\n"
+						System.out.println("There are more lines in the file " + filename + " than there should be.\n"
 								+ "Please alter this file to follow the formatting specifications specified\n"
 								+ "in the assignment guidelines and run this program again.");
 						return 3;
 					}
-				}
-				else
-				{
-					System.out.println("There are an incorrect number of nodes on line "+ lineCount + " in the file "+filename+".\n"
+				} else {
+					System.out.println("There are an incorrect number of nodes on line " + lineCount + " in the file "
+							+ filename + ".\n"
 							+ "Please alter this file to follow the formatting specifications listed in\n"
 							+ "the assignment guidelines and run this program again");
 					return lineCount;
@@ -188,33 +223,31 @@ public class Assignment_10 {
 		}
 		BufferedReader fileIn = new BufferedReader(fr);
 		String line;
-		Assignment_10.dVMatrix = new int[Assignment_10.neighbors.size()+1][this.getNumRout()];
+		Assignment_10.dVMatrix = new int[Assignment_10.neighbors.size() + 1][this.getNumRout()];
 		int lineCount = 1;
 		try {
 			Assignment_10.dVMatrix[0] = Assignment_10.D0;
 			while ((line = fileIn.readLine()) != null) {
 				String[] stringNumbers = line.split("\t");
 				int stringNumbersLength = stringNumbers.length;
-				int[] numbers = new int[stringNumbersLength-1];
+				int[] numbers = new int[stringNumbersLength - 1];
 				for (int i = 1; i < stringNumbersLength; i++) {
-					numbers[i-1] = Integer.parseInt(stringNumbers[i]);
+					numbers[i - 1] = Integer.parseInt(stringNumbers[i]);
 				}
 				int numbersLength = numbers.length;
-				if(numbersLength == this.getNumRout())
-				{
-					if(lineCount < Assignment_10.neighbors.size()+1)
-						Assignment_10.dVMatrix[lineCount]= numbers;
-					else
-					{
-						System.out.println("There are two many neighboring vectors in the file "+filename+". Please adjust\n"
+				if (numbersLength == this.getNumRout()) {
+					if (lineCount < Assignment_10.neighbors.size() + 1)
+						Assignment_10.dVMatrix[lineCount] = numbers;
+					else {
+						System.out.println("There are two many neighboring vectors in the file " + filename
+								+ ". Please adjust\n"
 								+ "The file so it matches the guidlines specified in Assignment_10 and \n"
 								+ "run the program again");
 						return lineCount;
 					}
-				}
-				else
-				{
-					System.out.println("There are an incorrect number of nodes on line "+ lineCount + " in the file "+filename+".\n"
+				} else {
+					System.out.println("There are an incorrect number of nodes on line " + lineCount + " in the file "
+							+ filename + ".\n"
 							+ "Please alter this file to follow the formatting specifications listed in\n"
 							+ "the assignment guidelines and run this program again");
 					return lineCount;
