@@ -5,10 +5,10 @@ import org.junit.Test;
 
 
 public class Assignment_10_Test {
-	Assignment_10 a10;
+	Assignment_10_Benjamin_Boudra a10;
 	@Before
 	public void setUp() throws Exception {
-		a10 = new Assignment_10();
+		a10 = new Assignment_10_Benjamin_Boudra();
 		a10.setNumRout(6);
 	}
 
